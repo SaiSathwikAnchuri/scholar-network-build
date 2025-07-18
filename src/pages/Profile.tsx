@@ -1,0 +1,345 @@
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  MapPin,
+  Briefcase,
+  Calendar,
+  MessageSquare,
+  ExternalLink,
+  Linkedin,
+  Github,
+  Globe,
+  Mail,
+  Phone,
+  GraduationCap,
+  Award,
+  Users,
+} from 'lucide-react';
+
+const Profile = () => {
+  const { id } = useParams();
+  const { user: currentUser } = useAuth();
+  
+  // Mock profile data - in real app this would come from API
+  const profileUser = {
+    id: '2',
+    name: 'Sarah Johnson',
+    email: 'sarah.johnson@gmail.com',
+    profilePicture: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sarah',
+    graduationYear: 2020,
+    currentPosition: 'Senior Software Engineer',
+    company: 'Google',
+    location: 'San Francisco, CA',
+    department: 'Computer Science',
+    degree: 'B.Tech',
+    cgpa: 3.85,
+    bio: 'Passionate software engineer with 4+ years of experience in web development and cloud technologies. I love mentoring junior developers and contributing to open-source projects.',
+    skills: ['React', 'Node.js', 'Python', 'AWS', 'Docker', 'Kubernetes', 'GraphQL', 'TypeScript'],
+    linkedin: 'https://linkedin.com/in/sarahjohnson',
+    github: 'https://github.com/sarahjohnson',
+    website: 'https://sarahjohnson.dev',
+    phone: '+1-555-0123',
+    isOnline: true,
+    lastSeen: new Date(),
+    // Additional profile data
+    experience: [
+      {
+        title: 'Senior Software Engineer',
+        company: 'Google',
+        duration: '2022 - Present',
+        description: 'Lead development of scalable web applications serving millions of users.',
+      },
+      {
+        title: 'Software Engineer',
+        company: 'Facebook',
+        duration: '2020 - 2022',
+        description: 'Developed and maintained React-based frontend applications.',
+      },
+    ],
+    achievements: [
+      'Google Cloud Professional Developer Certification',
+      'Top Performer Award 2023',
+      'Open Source Contributor - 50+ repositories',
+      'Tech Speaker at 10+ conferences',
+    ],
+    mentorshipStats: {
+      studentsHelped: 25,
+      jobPlacements: 8,
+      projects: 12,
+    },
+  };
+
+  const isOwnProfile = currentUser?.id === id;
+
+  return (
+    <div className="space-y-6">
+      {/* Profile Header */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className="flex flex-col items-center lg:items-start">
+              <div className="relative">
+                <Avatar className="h-32 w-32">
+                  <AvatarImage src={profileUser.profilePicture} alt={profileUser.name} />
+                  <AvatarFallback className="text-2xl">
+                    {profileUser.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className={`absolute -bottom-2 -right-2 w-6 h-6 rounded-full border-4 border-background ${
+                  profileUser.isOnline ? 'bg-success' : 'bg-muted-foreground'
+                }`} />
+              </div>
+              <div className="mt-4 flex gap-2">
+                {!isOwnProfile && (
+                  <>
+                    <Button>
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Message
+                    </Button>
+                    <Button variant="outline">
+                      <Users className="mr-2 h-4 w-4" />
+                      Connect
+                    </Button>
+                  </>
+                )}
+                {isOwnProfile && (
+                  <Button variant="outline">
+                    Edit Profile
+                  </Button>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex-1 space-y-4">
+              <div>
+                <h1 className="text-3xl font-bold">{profileUser.name}</h1>
+                <p className="text-xl text-muted-foreground">{profileUser.currentPosition}</p>
+                <p className="text-lg font-medium text-primary">{profileUser.company}</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4" />
+                  Class of {profileUser.graduationYear} • {profileUser.department}
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4" />
+                  {profileUser.location}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4" />
+                  CGPA: {profileUser.cgpa}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Briefcase className="h-4 w-4" />
+                  {profileUser.experience.length} work experiences
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {profileUser.skills.slice(0, 8).map((skill, index) => (
+                  <Badge key={index} variant="secondary">
+                    {skill}
+                  </Badge>
+                ))}
+                {profileUser.skills.length > 8 && (
+                  <Badge variant="outline">
+                    +{profileUser.skills.length - 8} more
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="flex gap-4">
+                {profileUser.linkedin && (
+                  <a href={profileUser.linkedin} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <Linkedin className="mr-2 h-4 w-4" />
+                      LinkedIn
+                    </Button>
+                  </a>
+                )}
+                {profileUser.github && (
+                  <a href={profileUser.github} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <Github className="mr-2 h-4 w-4" />
+                      GitHub
+                    </Button>
+                  </a>
+                )}
+                {profileUser.website && (
+                  <a href={profileUser.website} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm">
+                      <Globe className="mr-2 h-4 w-4" />
+                      Website
+                    </Button>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Profile Tabs */}
+      <Tabs defaultValue="about" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="about">About</TabsTrigger>
+          <TabsTrigger value="experience">Experience</TabsTrigger>
+          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+          <TabsTrigger value="mentorship">Mentorship</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="about" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>About</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground leading-relaxed">
+                {profileUser.bio}
+              </p>
+            </CardContent>
+          </Card>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <span>{profileUser.email}</span>
+                </div>
+                {profileUser.phone && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <span>{profileUser.phone}</span>
+                  </div>
+                )}
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span>{profileUser.location}</span>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Academic Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Department:</span>
+                  <span>{profileUser.department}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Degree:</span>
+                  <span>{profileUser.degree}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Graduation Year:</span>
+                  <span>{profileUser.graduationYear}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">CGPA:</span>
+                  <span>{profileUser.cgpa}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="experience" className="space-y-6">
+          {profileUser.experience.map((exp, index) => (
+            <Card key={index}>
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle>{exp.title}</CardTitle>
+                    <CardDescription>{exp.company}</CardDescription>
+                  </div>
+                  <Badge variant="outline">{exp.duration}</Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{exp.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </TabsContent>
+        
+        <TabsContent value="achievements" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Achievements & Certifications</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {profileUser.achievements.map((achievement, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <Award className="h-4 w-4 text-primary" />
+                    <span>{achievement}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="mentorship" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl">{profileUser.mentorshipStats.studentsHelped}</CardTitle>
+                <CardDescription>Students Helped</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl">{profileUser.mentorshipStats.jobPlacements}</CardTitle>
+                <CardDescription>Job Placements</CardDescription>
+              </CardHeader>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl">{profileUser.mentorshipStats.projects}</CardTitle>
+                <CardDescription>Projects Mentored</CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Request Mentorship</CardTitle>
+              <CardDescription>
+                Get guidance from {profileUser.name} on career development and technical skills
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {!isOwnProfile && (
+                <Button>
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Request Mentorship
+                </Button>
+              )}
+              {isOwnProfile && (
+                <p className="text-muted-foreground">
+                  Other users can request mentorship from this section
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default Profile;
