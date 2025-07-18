@@ -70,8 +70,8 @@ const Directory = () => {
     const matchesSearch = person.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          person.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          person.currentPosition.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesYear = !filterYear || person.graduationYear.toString() === filterYear;
-    const matchesDepartment = !filterDepartment || person.department === filterDepartment;
+    const matchesYear = !filterYear || filterYear === 'all-years' || person.graduationYear.toString() === filterYear;
+    const matchesDepartment = !filterDepartment || filterDepartment === 'all-departments' || person.department === filterDepartment;
     
     return matchesSearch && matchesYear && matchesDepartment;
   });
@@ -110,7 +110,7 @@ const Directory = () => {
                   <SelectValue placeholder="Graduation Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Years</SelectItem>
+                  <SelectItem value="all-years">All Years</SelectItem>
                   {years.map(year => (
                     <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
                   ))}
@@ -122,7 +122,7 @@ const Directory = () => {
                   <SelectValue placeholder="Department" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Departments</SelectItem>
+                  <SelectItem value="all-departments">All Departments</SelectItem>
                   {departments.map(dept => (
                     <SelectItem key={dept} value={dept}>{dept}</SelectItem>
                   ))}
@@ -133,8 +133,8 @@ const Directory = () => {
                 variant="outline"
                 onClick={() => {
                   setSearchQuery('');
-                  setFilterYear('');
-                  setFilterDepartment('');
+                  setFilterYear('all-years');
+                  setFilterDepartment('all-departments');
                 }}
               >
                 Clear Filters
